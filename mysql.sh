@@ -1,15 +1,18 @@
-echo -e "\e[33mdisable current version of sql\e[0m"
-yum module disable mysql -y &>>/tmp/roboshop.log
+source common.sh
+component=mysql
 
-echo -e "\e[33mCop mysql repo file\e[0m"
-cp /home/centos/roboshop-shell/mysql.repo /etc/yum.repos.d/mysql.repo
+echo -e "${color}disable current version of sql${nocolor}"
+yum module disable ${component} -y ${log_file}
 
-echo -e "\e[33mInstalling mysql\e[0m"
-yum install mysql-community-server -y &>>/tmp/roboshop.log
+echo -e "${color}Cop ${component} repo file${nocolor}"
+cp /home/centos/roboshop-shell/${component}.repo /etc/yum.repos.d/${component}.repo
 
-echo -e "\e[33m start sql service\e[0m"
-systemctl enable mysqld &>>/tmp/roboshop.log
-systemctl restart mysqld &>>/tmp/roboshop.log
+echo -e "${color}Installing ${component}${nocolor}"
+yum install ${component}-community-server -y ${log_file}
 
-echo -e "\e[33mset up password\e[0m"
-mysql_secure_installation --set-root-pass RoboShop@1 &>>/tmp/roboshop.log
+echo -e "${color} start sql service${nocolor}"
+systemctl enable ${component}d ${log_file}
+systemctl restart ${component}d ${log_file}
+
+echo -e "${color}set up password${nocolor}"
+${component}_secure_installation --set-root-pass $1 ${log_file}
